@@ -1,10 +1,12 @@
 package com.example.demo.exceptions;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 public class ExceptionResponse implements Serializable {
-
+    @Serial
+    private static final long serialVersionUID = 4201584944968182566L;
     private Date timestamp;
     private String message;
     private String details;
