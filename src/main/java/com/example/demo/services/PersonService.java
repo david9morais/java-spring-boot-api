@@ -2,9 +2,11 @@ package com.example.demo.services;
 
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.mapper.DozerMapper;
+import com.example.demo.mapper.custom.PersonMapper;
 import com.example.demo.model.Person;
 import com.example.demo.repositories.PersonRepository;
 import com.example.demo.valueobject.PersonVO;
+import com.example.demo.valueobject.v2.PersonVOV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class PersonService {
 
     @Autowired
     private PersonRepository repository;
+
+    @Autowired
+    private PersonMapper mapper;
 
     public PersonVO findById(Long id) {
         var emtity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
@@ -28,6 +33,12 @@ public class PersonService {
     public PersonVO create(PersonVO person) {
         var entity = DozerMapper.parseObject(person, Person.class);
         var vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
+        return vo;
+    }
+
+    public PersonVOV2 createV2(PersonVOV2 person) {
+        var entity = mapper.convertVoTOEntity(person);
+        var vo =  mapper.convertEntityToVo(repository.save(entity));
         return vo;
     }
 
