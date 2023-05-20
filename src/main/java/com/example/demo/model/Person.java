@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.github.dozermapper.core.Mapping;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -15,6 +16,7 @@ public class Person implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Mapping("key")
     private Long id;
 
     @Column(name = "first_name", nullable = false, length = 80)
