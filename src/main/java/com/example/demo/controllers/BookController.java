@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/book/v1")
-@Tag(name = "Books", description = "Endpoints for managing books")
+@Tag(name = "Book", description = "Endpoints for managing books")
 public class BookController {
 
     @Autowired
@@ -29,12 +29,7 @@ public class BookController {
             tags = {"Book"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = BookVO.class))
-                                    )
-                            }),
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookVO.class)))),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -46,7 +41,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Find a book", description = "Find a book", tags = {"Books"}, responses = {
+    @Operation(summary = "Find a book", description = "Find a book", tags = {"Book"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = BookVO.class))),
             @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
