@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import com.example.demo.services.PersonService;
 import com.example.demo.util.MediaType;
 import com.example.demo.valueobject.PersonVO;
-import com.example.demo.valueobject.v2.PersonVOV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

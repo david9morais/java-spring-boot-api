@@ -4,7 +4,6 @@ package com.example.demo.valueobject;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
-import jakarta.persistence.Column;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
