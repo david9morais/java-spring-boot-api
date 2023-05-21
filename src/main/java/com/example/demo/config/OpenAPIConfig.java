@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfig {
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    OpenAPI customOpenAPI() {
         return new OpenAPI().info(
                 new Info()
                         .title("Java SpringBoot RESTful API")

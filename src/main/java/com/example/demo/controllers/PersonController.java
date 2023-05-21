@@ -36,6 +36,7 @@ public class PersonController {
         return personService.findAll();
     }
 
+    @CrossOrigin
     @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Find a person", description = "Find a person", tags = {"People"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = PersonVO.class))),
@@ -49,6 +50,7 @@ public class PersonController {
         return personService.findById(id);
     }
 
+    @CrossOrigin
     @PostMapping(
             produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML },
             consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })

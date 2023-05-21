@@ -2,10 +2,8 @@ package com.example.demo.services;
 
 import com.example.demo.exceptions.RequiredObjectIsNullException;
 import com.example.demo.model.Book;
-import com.example.demo.model.Book;
 import com.example.demo.repositories.BookRepository;
 import com.example.demo.unittests.mapper.mocks.MockBook;
-import com.example.demo.valueobject.BookVO;
 import com.example.demo.valueobject.BookVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,9 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
