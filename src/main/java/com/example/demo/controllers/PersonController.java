@@ -24,19 +24,6 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Find a person", description = "Find a person", tags = {"People"}, responses = {
-            @ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = PersonVO.class))),
-            @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = {})
-    })
-    public PersonVO findById(@PathVariable(value = "id") Long id) {
-        return personService.findById(id);
-    }
-
     @GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Find all people", description = "Find all people", tags = {"People"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200"
@@ -53,6 +40,19 @@ public class PersonController {
     })
     public List<PersonVO> findAll() {
         return personService.findAll();
+    }
+
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @Operation(summary = "Find a person", description = "Find a person", tags = {"People"}, responses = {
+            @ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = PersonVO.class))),
+            @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Server Error", responseCode = "500", content = {})
+    })
+    public PersonVO findById(@PathVariable(value = "id") Long id) {
+        return personService.findById(id);
     }
 
     @PostMapping(

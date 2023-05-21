@@ -25,6 +25,8 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 
     private String title;
 
+    public BookVO() {}
+
     public Long getKey() {
         return key;
     }
