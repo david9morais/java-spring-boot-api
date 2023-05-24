@@ -40,7 +40,7 @@ public class BookController {
         return service.findAll();
     }
 
-    @CrossOrigin
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Find a book", description = "Find a book", tags = {"Book"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = BookVO.class))),
@@ -54,7 +54,7 @@ public class BookController {
         return service.findById(id);
     }
 
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:8080", "https://www.erudio.com.br"})
     @PostMapping(
             consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML  },
             produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML  })
