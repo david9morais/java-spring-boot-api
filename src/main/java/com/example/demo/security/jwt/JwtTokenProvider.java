@@ -1,4 +1,4 @@
-package com.example.demo.securityjwt;
+package com.example.demo.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -87,7 +87,7 @@ public class JwtTokenProvider {
         return jwtVerifier.verify(token);
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if(Objects.nonNull(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring("Bearer ".length());
