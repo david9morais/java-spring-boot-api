@@ -44,22 +44,21 @@ public class JwtTokenProvider {
     public TokenVO createAccessToken(String username, List<String> roles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        var accessToken = getRefreshToken(username, roles, now, validity);
+        var accessToken = getAccessToken(username, roles, now, validity);
         var refreshToken = getRefreshToken(username, roles, now);
 
         return new TokenVO(username, true, now, validity, accessToken, refreshToken);
     }
 
-    private String getRefreshToken(String username, List<String> roles, Date now, Date validity) {
-        String issueUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        return JWT.create()
-                .withClaim("roles",roles)
-                .withIssuedAt(now)
-                .withExpiresAt(validity)
-                .withSubject(username)
-                .withIssuer(issueUrl)
-                .sign(algorithm)
-                .strip();
+    public TokenVO refreshToken(String refreshToken) {
+        if (refreshToken.contains("Bearer ")) refreshToken =
+                refreshToken.substring("Bearer ".length());
+
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+        String username = decodedJWT.getSubject();
+        List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+        return createAccessToken(username, roles);
     }
 
     private String getRefreshToken(String username, List<String> roles, Date now) {
@@ -69,6 +68,19 @@ public class JwtTokenProvider {
                 .withIssuedAt(now)
                 .withExpiresAt(validityRefreshToken)
                 .withSubject(username)
+                .sign(algorithm)
+                .strip();
+    }
+
+    private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
+        String issuerUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath().build().toUriString();
+        return JWT.create()
+                .withClaim("roles", roles)
+                .withIssuedAt(now)
+                .withExpiresAt(validity)
+                .withSubject(username)
+                .withIssuer(issuerUrl)
                 .sign(algorithm)
                 .strip();
     }
