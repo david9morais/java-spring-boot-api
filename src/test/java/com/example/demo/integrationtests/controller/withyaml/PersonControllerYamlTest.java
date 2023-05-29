@@ -77,7 +77,7 @@
 
      @Test
      @Order(1)
-     public void testCreate() throws JsonProcessingException {
+     public void testCreate() {
          mockPerson();
 
          var createdPerson = given()
@@ -107,6 +107,7 @@
          assertNotNull(createdPerson.getLastName());
          assertNotNull(createdPerson.getAddress());
          assertNotNull(createdPerson.getGender());
+         assertTrue(createdPerson.getEnabled());
 
          assertTrue(createdPerson.getId() > 0);
 
@@ -118,7 +119,46 @@
 
      @Test
      @Order(2)
-     public void testFindById() throws JsonProcessingException {
+     public void testDisableById() {
+         var persistedPerson = given()
+                 .spec(requestSpecification)
+                 .config(RestAssuredConfig
+                         .config()
+                         .encoderConfig(EncoderConfig
+                                 .encoderConfig()
+                                 .encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+                 .contentType(TestConfigs.CONTENT_TYPE_YML)
+                 .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+                 .pathParam("id", person.getId())
+                 .when()
+                 .patch("{id}")
+                 .then()
+                 .statusCode(200)
+                 .extract()
+                 .body()
+                 .as(PersonVO.class, objectMapper);
+
+         person = persistedPerson;
+
+         assertNotNull(persistedPerson);
+         assertNotNull(persistedPerson.getId());
+         assertNotNull(persistedPerson.getFirstName());
+         assertNotNull(persistedPerson.getLastName());
+         assertNotNull(persistedPerson.getAddress());
+         assertNotNull(persistedPerson.getGender());
+         assertFalse(persistedPerson.getEnabled());
+
+         assertTrue(persistedPerson.getId() > 0);
+
+         assertEquals("Richard", persistedPerson.getFirstName());
+         assertEquals("Stallman", persistedPerson.getLastName());
+         assertEquals("New York City, US", persistedPerson.getAddress());
+         assertEquals("Male", persistedPerson.getGender());
+     }
+
+     @Test
+     @Order(3)
+     public void testFindById() {
          mockPerson();
 
          var persistedPerson = given()
@@ -148,6 +188,7 @@
          assertNotNull(persistedPerson.getLastName());
          assertNotNull(persistedPerson.getAddress());
          assertNotNull(persistedPerson.getGender());
+         assertFalse(persistedPerson.getEnabled());
 
          assertTrue(persistedPerson.getId() > 0);
 
@@ -158,8 +199,8 @@
      }
 
      @Test
-     @Order(3)
-     public void testUpdate() throws JsonProcessingException {
+     @Order(4)
+     public void testUpdate() {
          person.setLastName("Piquet");
 
          var createdPerson = given()
@@ -189,6 +230,7 @@
          assertNotNull(createdPerson.getLastName());
          assertNotNull(createdPerson.getAddress());
          assertNotNull(createdPerson.getGender());
+         assertFalse(createdPerson.getEnabled());
 
          assertEquals(person.getId(), createdPerson.getId());
 
@@ -199,7 +241,7 @@
      }
 
      @Test
-     @Order(4)
+     @Order(5)
      public void testDelete() {
          var content = given()
                  .spec(requestSpecification)
@@ -217,8 +259,8 @@
      }
 
      @Test
-     @Order(5)
-     public void testFindAll() throws JsonProcessingException {
+     @Order(6)
+     public void testFindAll() {
          var content = given()
                  .spec(requestSpecification)
                  .config(RestAssuredConfig
@@ -249,6 +291,8 @@
          assertNotNull(foundPersonOne.getAddress());
          assertNotNull(foundPersonOne.getGender());
 
+         assertTrue(foundPersonOne.getEnabled());
+
          assertEquals(1,foundPersonOne.getId());
          assertEquals("Guimarães", foundPersonOne.getFirstName());
          assertEquals("David", foundPersonOne.getLastName());
@@ -264,6 +308,8 @@
          assertNotNull(foundPersonTwo.getAddress());
          assertNotNull(foundPersonTwo.getGender());
 
+         assertTrue(foundPersonTwo.getEnabled());
+
          assertEquals(2,foundPersonTwo.getId());
          assertEquals("Guimarães - Portugal", foundPersonTwo.getFirstName());
          assertEquals("Dinis", foundPersonTwo.getLastName());
@@ -272,7 +318,7 @@
      }
 
      @Test
-     @Order(6)
+     @Order(7)
      public void testFindAllWithoutToken() {
          RequestSpecification requestSpecificationWithoutToken = new RequestSpecBuilder()
                  .setBasePath("/api/person/v1")
@@ -302,5 +348,6 @@
          person.setLastName("Stallman");
          person.setAddress("New York City, US");
          person.setGender("Male");
+         person.setEnabled(true);
      }
  }

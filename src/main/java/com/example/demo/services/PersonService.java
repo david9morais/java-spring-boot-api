@@ -9,6 +9,7 @@ import com.example.demo.model.Person;
 import com.example.demo.repositories.PersonRepository;
 import com.example.demo.valueobject.PersonVO;
 import com.example.demo.valueobject.v2.PersonVOV2;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +72,14 @@ public class PersonService {
     public void delete(Long id) {
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
         repository.delete(entity);
+    }
+
+    @Transactional
+    public PersonVO disablePerson(Long id) {
+        repository.disablePerson(id);
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+        var vo = DozerMapper.parseObject(entity, PersonVO.class);
+        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return vo;
     }
 }
