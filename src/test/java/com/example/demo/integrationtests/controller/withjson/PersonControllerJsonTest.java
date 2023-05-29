@@ -37,7 +37,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(0)
-	public void authorization() throws JsonProcessingException {
+	public void authorization() {
 		AccountCredentialsVO user = new AccountCredentialsVO("leandro", "admin123");
 
 		var accessToken = given()
@@ -100,7 +100,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonProcessingException {
+	public void testCreateWithWrongOrigin() {
 		mockPerson();
 
 		var content = given()
@@ -158,7 +158,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(4)
-	public void testFindByIdWithWrongOrigin() throws JsonProcessingException {
+	public void testFindByIdWithWrongOrigin() {
 		mockPerson();
 
 		var content = given()
