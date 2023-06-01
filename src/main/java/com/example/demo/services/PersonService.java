@@ -11,6 +11,12 @@ import com.example.demo.valueobject.PersonVO;
 import com.example.demo.valueobject.v2.PersonVOV2;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +32,9 @@ public class PersonService {
     private PersonRepository repository;
 
     @Autowired
+    private PagedResourcesAssembler<PersonVO> assembler;
+
+    @Autowired
     private PersonMapper mapper;
 
     public PersonVO findById(Long id) {
@@ -35,10 +44,12 @@ public class PersonService {
         return vo;
     }
 
-    public List<PersonVO> findAll() {
-        var persons = DozerMapper.parseObjects(repository.findAll(), PersonVO.class);
-        persons.forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
-        return persons;
+    public PagedModel<EntityModel<PersonVO>> findAll(Pageable pageable) {
+        var personPage = repository.findAll(pageable);
+        var personVOPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
+        personVOPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+        Link link = linkTo(methodOn(PersonController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+        return assembler.toModel(personVOPage, link);
     }
 
     public PersonVO create(PersonVO person) {
