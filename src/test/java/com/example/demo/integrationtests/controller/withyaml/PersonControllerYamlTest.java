@@ -6,10 +6,8 @@
  import com.example.demo.integrationtests.vo.AccountCredentialsVO;
  import com.example.demo.integrationtests.vo.PersonVO;
  import com.example.demo.integrationtests.vo.TokenVO;
- import com.fasterxml.jackson.core.JsonProcessingException;
- import com.fasterxml.jackson.core.type.TypeReference;
- import com.fasterxml.jackson.databind.DeserializationFeature;
- import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+ import com.example.demo.integrationtests.vo.pagedmodels.PagedModelPerson;
+ import com.example.demo.integrationtests.vo.wrappers.WrapperPersonVO;
  import io.restassured.builder.RequestSpecBuilder;
  import io.restassured.config.EncoderConfig;
  import io.restassured.config.RestAssuredConfig;
@@ -20,9 +18,6 @@
  import io.restassured.specification.RequestSpecification;
  import org.junit.jupiter.api.*;
  import org.springframework.boot.test.context.SpringBootTest;
-
- import java.util.Arrays;
- import java.util.List;
 
  import static io.restassured.RestAssured.given;
  import static org.junit.jupiter.api.Assertions.*;
@@ -261,7 +256,7 @@
      @Test
      @Order(6)
      public void testFindAll() {
-         var content = given()
+         var wrapper = given()
                  .spec(requestSpecification)
                  .config(RestAssuredConfig
                          .config()
@@ -269,6 +264,7 @@
                                  .encoderConfig()
                                  .encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
                  .contentType(TestConfigs.CONTENT_TYPE_YML)
+                 .queryParams("page", 2, "size", 10, "direction", "asc")
                  .accept(TestConfigs.CONTENT_TYPE_YML)
                  .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
                  .body(person, objectMapper)
@@ -278,9 +274,9 @@
                  .statusCode(200)
                  .extract()
                  .body()
-                 .as(PersonVO[].class, objectMapper);
+                 .as(PagedModelPerson.class, objectMapper);
 
-         List<PersonVO> people = Arrays.asList(content);
+         var people = wrapper.getContent();
 
          PersonVO foundPersonOne = people.get(0);
 
@@ -291,13 +287,13 @@
          assertNotNull(foundPersonOne.getAddress());
          assertNotNull(foundPersonOne.getGender());
 
-         assertTrue(foundPersonOne.getEnabled());
+         assertTrue(!foundPersonOne.getEnabled());
 
-         assertEquals(1,foundPersonOne.getId());
-         assertEquals("Guimarães", foundPersonOne.getFirstName());
-         assertEquals("David", foundPersonOne.getLastName());
-         assertEquals("Male", foundPersonOne.getAddress());
-         assertEquals("Morais", foundPersonOne.getGender());
+         assertEquals(725,foundPersonOne.getId());
+         assertEquals("Alberto", foundPersonOne.getFirstName());
+         assertEquals("Chazotte", foundPersonOne.getLastName());
+         assertEquals("384 Maple Place", foundPersonOne.getAddress());
+         assertEquals("Male", foundPersonOne.getGender());
 
          PersonVO foundPersonTwo = people.get(1);
 
@@ -310,11 +306,11 @@
 
          assertTrue(foundPersonTwo.getEnabled());
 
-         assertEquals(2,foundPersonTwo.getId());
-         assertEquals("Guimarães - Portugal", foundPersonTwo.getFirstName());
-         assertEquals("Dinis", foundPersonTwo.getLastName());
-         assertEquals("Male", foundPersonTwo.getAddress());
-         assertEquals("Morais", foundPersonTwo.getGender());
+         assertEquals(915,foundPersonTwo.getId());
+         assertEquals("Albrecht", foundPersonTwo.getFirstName());
+         assertEquals("Corsor", foundPersonTwo.getLastName());
+         assertEquals("36 Kipling Hill", foundPersonTwo.getAddress());
+         assertEquals("Male", foundPersonTwo.getGender());
      }
 
      @Test
