@@ -28,7 +28,6 @@ jobs:
       run: mvn clean package
         
     - name: Build Docker Compose
-      working-directory: ./Java Spring React
       run: docker compose build
       
     - name: push to Docker Hub
