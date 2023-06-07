@@ -28,7 +28,7 @@ jobs:
       run: mvn clean package
         
     - name: Build Docker Compose
-      working-directory: ./java-spring-boot-api-docker
+      working-directory: ${{ github.workspace }}
       run: docker compose build
       
     - name: push to Docker Hub
