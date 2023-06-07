@@ -28,6 +28,7 @@ jobs:
       run: mvn clean package
         
     - name: Build Docker Compose
+      working-directory: ./App
       run: docker compose build
       
     - name: push to Docker Hub
